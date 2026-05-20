@@ -2,21 +2,21 @@
 
 I'm writing this course material on my personal PC at home, and that's recently become a problem.
 
-There are _a lot_ of files on this PC I don't want an AI agent to see: Terabytes of photos (I'm also a photographer), all my bookkeeping documents, and loads of old project files for clients who would be get upset if their stuff got anywhere near an AI. The same PC is where I'm writing these lessons, building demo projects, and trying out Claude Code to stay up-to-date as a developer.
+There are _a lot_ of files on this PC I don't want an AI agent to see: Terabytes of photos (I'm also a photographer), all my bookkeeping documents, and loads of old project files for clients who would get upset if their stuff got anywhere near an AI. The same PC is where I'm writing these lessons, building demo projects, and trying out Claude Code to stay up-to-date as a developer.
 
-So I built a sandbox. A sealed environment, without access to the other files on my machine, where I can experiment and install things. It's not a new thing, but these days, it is what all developers should get used to! After you've set it up, there are many other benefits: Your dev environment is now more portable and easier to share with others (no more 'it works on my machine'), and it lessens the impact of supply chain attacks (such as hacker hijacking npm packages).
+So I built a sandbox. A sealed environment, without access to the other files on my machine, where I can experiment and install things. It's not a new thing, but these days, it is what all developers should get used to! After you've set it up, there are many other benefits: your dev environment is now more portable and easier to share with others (no more 'it works on my machine'), and it lessens the impact of supply chain attacks (such as a hacker hijacking npm packages).
 
-This in an extra lesson on how to build that box. You're going to want one too.
+This is an extra lesson on how to build that box. You're going to want one too.
 
 ## Why?
 
 Three years ago, if you told me about a tool that would read files you didn't open and run commands you didn't type, I'd have called it malware. The difference is that this kind of malware is now helpful, you installed it on purpose, and most of the time you're glad it's there.
 
-Old tools (your editor, your terminal, your linter) did exactly what you told them. New tools (Claude Code, Cursor, Copilot Agent, whatever comes next) take initiative. They poke around. They guess. Sometimes brilliantly. Sometimes wrong.
+Old tools (your editor, your terminal, your linter) did exactly what you told them. New tools (Claude Code, Cursor, Copilot Agent, whatever comes next) take initiative. They poke around and guess, sometimes brilliantly, sometimes wrong.
 
-You give the AI room to move, the AI saves you time. That's fine until "room to move" means the wrong folder. So lets put a fence around it.
+You give the AI room to move, the AI saves you time. That's fine until "room to move" means the wrong folder. So let's put a fence around it.
 
-There are actually two fences worth having. The first is version control. Git is what saves you when the AI confidently rewrites a file you didn't ask it to touch. We'll cover that pattern throughout the course; for now, just know that _every_ AI-assisted edit is something you should be able to throw away with `git checkout .` if you don't like it.
+There are actually two fences worth having. The first is version control. Git is what saves you when the AI confidently rewrites a file you didn't ask it to touch. We'll cover that pattern throughout the course. For now, just know that _every_ AI-assisted edit is something you should be able to throw away with `git checkout .` if you don't like it.
 
 The second fence is the one we're building here: an isolated environment, so that even if everything inside it catches fire, your laptop is fine.
 
@@ -35,13 +35,13 @@ The tools we'll put in the box this week:
 - Node.js (for everything frontend in this course)
 - Claude Code (the AI agent)
 
-Later in the course, when we start working on the backend, we'll add one more line and .NET 10 appears inside the same box. Same file. Same pattern. The container rebuilds and the new tools are there.
+Later in the course, when we start working on the backend, we add one line to this file and .NET 10 appears inside the same box. The container rebuilds, the new tools are there, and nothing about your workflow changes.
 
 Once you've done it once, you do it for every project. The box is per-project, not per-machine.
 
 ## The layers underneath
 
-A quick explanation before we start installing things, from bottom to top:
+From the bottom up:
 
 - **Windows.** Your operating system. We're keeping this clean. (It works on OSX and Linux too, just ignore the WSL part)
 - **WSL2.** A real Linux kernel running alongside Windows. Not a VM in the old sense, more like a deeply integrated second OS.
@@ -50,9 +50,9 @@ A quick explanation before we start installing things, from bottom to top:
 - **VS Code.** Your editor, running on Windows but connected to the dev container.
 - **Claude Code (and Node, and whatever else).** Tools installed inside the container.
 
-If some other tutorial mentions Docker Desktop, that's a packaging of WSL2 + Docker Engine + a GUI + Compose, sold to you as one product. We're not using it. The reason is partly practical (less resource intensive, no licensing stuff, fewer black boxes), but mostly pedagogical: I want you to see what Docker actually is. It becomes easier to fix problems when you understand them.
+If some other tutorial mentions Docker Desktop, that's a packaging of WSL2 + Docker Engine + a GUI + Compose, sold to you as one product. We're not using it. The reason is partly practical (less resource-intensive, no licensing stuff, fewer black boxes), but mostly pedagogical: I want you to see what Docker actually is. It becomes easier to fix problems when you understand them.
 
-> 🎓 If a student asks "Can't I just use Docker Desktop," the honest answer is yes, that also works, and Docker Desktop is a perfectly good tool, but we're choosing this path because it teaches them the underlying machinery, and it uses less resources on your laptops.
+> 🎓 If a student asks "Can't I just use Docker Desktop," the honest answer is yes. It works, and it's a perfectly good tool. We're choosing this path because it teaches the underlying machinery and uses fewer resources on their laptops.
 
 ### For Mac and Linux students
 
@@ -83,7 +83,7 @@ wsl --install
 
 This installs WSL2 and Ubuntu, the default Linux distribution. Restart your computer when prompted.
 
-After the restart, Ubuntu finishes its first-time setup and asks you to create a username and password. **Make sure you write these down somewhere (put them in your password manager!)**. They're separate from your Windows credentials.
+After the restart, Ubuntu finishes its first-time setup and asks you to create a username and password. **Write these down somewhere**, ideally in your password manager. They're separate from your Windows credentials.
 
 > Verify by opening PowerShell again and running:
 
@@ -101,7 +101,7 @@ ronald@MY-COMPUTER-NAME:~$
 
 The `~` at the end of the path is your Ubuntu home directory. That's where you want to be. If the path shows something else (for example `/mnt/c/Windows/System32`), you came from a PowerShell that was in a Windows folder. Run `cd ~` to go home.
 
-Anything you do from here happens inside the Linux environment, not Windows. Now lets set up the dev container!
+Anything you do from here happens inside the Linux environment, not Windows. Now let's set up the dev container!
 
 ## Step 2 - Install Docker Engine inside WSL2
 
@@ -118,7 +118,7 @@ This opens `nano`, a simple terminal-based editor. The filename shows at the top
 
 > Copy the script below and paste it into the `nano` window.
 
-Read it first. Don't worry. You don't have to be an expert at this, but shouldn't run scripts you haven't read, even when they're from your course materials.
+Read it first. You don't have to be an expert at this, but you shouldn't run scripts you haven't read, even when they're from your course materials.
 
 ```bash
 #!/usr/bin/env bash
@@ -150,7 +150,7 @@ fi
 if ! grep -qi ubuntu /etc/os-release 2>/dev/null; then
   echo "ERROR: This script is for Ubuntu. Your distribution is something else." >&2
   echo "If you're on a different distro, the steps are similar but the apt" >&2
-  echo "commands won't work as-is. See the chapter for the manual version." >&2
+  echo "commands won't work as-is. See the lesson for the manual version." >&2
   exit 1
 fi
 
@@ -282,19 +282,17 @@ docker run hello-world
 
 If you see a welcome message from Docker, the daemon is running, your user can talk to it, and the layers are all wired up. It works! Yay.
 
-If it doesn't, first scroll down to the troubleshooting chapter.
+If it doesn't, first scroll down to the troubleshooting section.
 
 ### What the script just did
 
-Worth a brief walkthrough, so you get a feeling for all this stuff.
-
-Docker is published as a set of packages (`docker-ce`, `docker-ce-cli`, `containerd.io`, plus a couple of plugins) in Docker's own apt repository. To install from that repository, your system needs to trust it, which means importing Docker's GPG key. The script did all of that. None of it is mysterious; it's a standard Linux package install with the trust handshake at the start.
+Docker is published as a set of packages (`docker-ce`, `docker-ce-cli`, `containerd.io`, plus a couple of plugins) in Docker's own apt repository. To install from that repository, your system needs to trust it, which means importing Docker's GPG key. The script did all of that. None of it is mysterious. It's a standard Linux package install with the trust handshake at the start.
 
 The `docker` group is a Linux convention: anyone in that group can talk to the Docker daemon without `sudo`. The script added you to it. Group changes only take effect on a new login, which is why the WSL shutdown was necessary.
 
 `Systemd` is the service manager that starts and stops daemons like Docker. WSL2 didn't have it by default for a long time, and it's still opt-in via `/etc/wsl.conf`. The script enabled it. After the WSL restart, the Docker daemon starts automatically whenever you open an Ubuntu terminal. We're doing all this now to make it easier to use.
 
-## Step 3 — Install VS Code
+## Step 3 - Install VS Code
 
 (Note: If you already have it, make sure it's updated!)
 
@@ -310,16 +308,16 @@ code --version
 
 You should see a VS Code version number. (If you see "command not found", check the troubleshooting section down below.)
 
-## Step 4 — Install the required VS Code extensions
+## Step 4 - Install the required VS Code extensions
 
 Two extensions, both from Microsoft:
 
-- **WSL** — lets VS Code edit files inside your WSL2 Ubuntu environment.
-- **Dev Containers** — lets VS Code open a project inside a Docker container.
+- **WSL**: lets VS Code edit files inside your WSL2 Ubuntu environment.
+- **Dev Containers**: lets VS Code open a project inside a Docker container.
 
 > In VS Code, press `Ctrl+Shift+X` to open the Extensions panel. Search for each name and install. Check that the publisher is "Microsoft" before clicking install — there are lookalikes from less-trusted authors.
 
-## Step 5 — Create your first dev container
+## Step 5 - Create your first dev container
 
 Now we put it all together.
 
@@ -391,7 +389,7 @@ claude --version    # a Claude Code version
 
 If both respond, your container is good.
 
-## Step 6 — Sign into Claude Code
+## Step 6 - Sign into Claude Code
 
 > Inside the container's terminal:
 
@@ -429,19 +427,19 @@ What the container does _not_ do: it doesn't make the AI inherently safe. Inside
 - Install packages, run scripts, create infinite-loop processes that eat your CPU.
 - Confidently rewrite your code in ways you didn't want.
 
-The container limits the _blast radius_. It doesn't eliminate the explosion. That's what version control is for. If Claude rewrites half your project in a way you didn't expect:
+The container limits the _blast radius_, not the explosion itself. That's what version control is for. If Claude rewrites half your project in a way you didn't expect:
 
 ```bash
 git checkout .
 ```
 
-Everything reverts to your last commit. That's your first safety net. The container is your second. Both are useful; the container alone is not enough.
+Everything reverts to your last commit. That's your first safety net, the container is your second, and you want both.
 
-Commit early, commit often, commit before any AI-assisted edit you're not 100% sure about.
+Commit early and often, and especially before any AI-assisted edit you're not sure about.
 
 ## Looking ahead
 
-You'll do this for every project in this course, and probably for every project after. Frontend project: same `devcontainer.json`, same tools inside. Group project (GameShelf): same file. Starlog along with us: same file.
+You'll do this for every project in this course, and probably for every project after. It's the same `devcontainer.json` and the same tools every time: the frontend project, the group project (GameShelf), and Starlog as we build it alongside you.
 
 When we start working on the backend, we add one line:
 
@@ -492,7 +490,7 @@ Enable the setting, save, and exit. Your laptop reboots back into Windows. Confi
 
 **The `postCreateCommand` fails with "Permission denied" trying to write to `/home/vscode/.claude/`.** The `onCreateCommand` that `chown`s the volume didn't run, or your `devcontainer.json` is missing it. Check that the file matches the version in Step 5. If you're stuck mid-build, rebuild from scratch (Command Palette → "Dev Containers: Rebuild Container Without Cache"). If that doesn't help, delete the volume entirely and rebuild (see "Something else broken" below).
 
-**`claude --version` works but `claude` itself hangs silently.** You're probably running an old or broken Claude Code install. The chapter's `devcontainer.json` uses the native installer (`curl -fsSL https://claude.ai/install.sh | bash`) because Anthropic deprecated the npm install path. If you somehow ended up with the npm-installed version, swap it: from inside the container, run `sudo npm uninstall -g @anthropic-ai/claude-code`, then re-run the curl install command. Open a new terminal afterwards so PATH refreshes.
+**`claude --version` works but `claude` itself hangs silently.** You're probably running an old or broken Claude Code install. This lesson's `devcontainer.json` uses the native installer (`curl -fsSL https://claude.ai/install.sh | bash`) because Anthropic deprecated the npm install path. If you somehow ended up with the npm-installed version, swap it: from inside the container, run `sudo npm uninstall -g @anthropic-ai/claude-code`, then re-run the curl install command. Open a new terminal afterwards so PATH refreshes.
 
 **Claude Code auth never completes inside the container.** Look at the terminal carefully for the auth URL. Sometimes the browser doesn't open automatically and you need to copy the URL to your Windows browser manually. After signing in, the browser redirects to a localhost URL that "fails to load"; the failed URL's address bar contains the `?code=XXX` parameter you need to paste back into the terminal. This is a known issue with OAuth callbacks inside containers.
 
@@ -512,7 +510,7 @@ Then reopen the project in VS Code and let it rebuild. Note: removing the volume
 
 ## What comes next
 
-Once this works, you have a clean, reproducible, isolated environment for every project in this course, and a pattern you can take to any project after!
+Once this works, you have an isolated, reproducible environment for every project, in this course and after!
 
 The next document (when I get around to writing it) covers Claude Code's permission system, how to write deny rules in `settings.json` for stricter projects, and an introduction to MCP, the protocol for extending Claude with custom tools. For now: get this setup working, try a few simple prompts to get a feel for Claude Code, and get comfortable with the rhythm of _open project → Reopen in Container → work → close_.
 
